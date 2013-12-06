@@ -1,4 +1,4 @@
-package com.edu.markingweapon.pojo;
+package com.api.monitor.pojo;
 
 public class UserInfo {
 

@@ -1,12 +1,12 @@
-package com.edu.markingweapon.activities;
+package com.api.monitor.activities;
 
 import java.util.HashMap;
 
-import com.edu.markingweapon.R;
-import com.edu.markingweapon.adapters.TextWatcherAdapter;
-import com.edu.markingweapon.pojo.UserInfo;
-import com.edu.markingweapon.utils.Constants;
-import com.edu.markingweapon.utils.Toaster;
+import com.api.monitor.adapters.TextWatcherAdapter;
+import com.api.monitor.pojo.UserInfo;
+import com.api.monitor.utils.Constants;
+import com.api.monitor.utils.Toaster;
+import com.api.monitor.R;
 
 import fast.rocket.Rocket;
 import fast.rocket.config.JsonCallback;
@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -159,7 +160,7 @@ public class LoginActivity extends Activity {
 			if (error != null) {
 				Toaster.errroMessage(error, LoginActivity.this);
 			} else {
-				
+				startActivity(new Intent(LoginActivity.this, MainActivity.class));
 			}
 		}
 	};

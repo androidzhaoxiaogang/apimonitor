@@ -1,9 +1,9 @@
-package com.edu.markingweapon.utils;
+package com.api.monitor.utils;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.edu.markingweapon.R;
+import com.api.monitor.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

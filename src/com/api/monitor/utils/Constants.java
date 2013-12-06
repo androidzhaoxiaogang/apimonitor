@@ -1,4 +1,4 @@
-package com.edu.markingweapon.utils;
+package com.api.monitor.utils;
 
 public class Constants {
 	public static final String serverHost = "http://211.149.146.93:9000/";

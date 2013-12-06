@@ -1,6 +1,6 @@
 
 
-package com.edu.markingweapon.adapters;
+package com.api.monitor.adapters;
 
 import android.text.Editable;
 import android.text.TextWatcher;

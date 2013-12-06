@@ -1,16 +1,30 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.api.monitor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".LoginActivity" >
+    android:background="@color/pager_background"
+    android:orientation="vertical" >
 
-    <TextView
-        android:layout_width="wrap_content"
+    <com.viewpagerindicator.TitlePageIndicator
+        android:id="@+id/tpi_header"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        textColor="@color/text_light"
+        android:background="@drawable/stripe_repeat"
+        app:clipPadding="10dp"
+        app:footerColor="@color/pager_footer"
+        app:footerIndicatorHeight="5dp"
+        app:footerIndicatorStyle="triangle"
+        app:footerLineHeight="4dp"
+        app:selectedBold="true"
+        app:selectedColor="@color/pager_selected_text"
+        app:titlePadding="10dp" />
 
-</RelativeLayout>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_pages"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</LinearLayout>
