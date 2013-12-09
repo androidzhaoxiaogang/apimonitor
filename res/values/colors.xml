@@ -13,6 +13,8 @@
     <color name="divider_bottom">#5A5A5A</color>
     <color name="edit_text_background_start">#EFF6FF</color>
     <color name="edit_text_background_end">#FBFDFF</color>
+    <color name="expand_text_background">#343434</color>
+    <color name="expand_row_background">#F0F0F0</color>
     <color name="main_background_start">#2E2E2E</color>
     <color name="main_background_end">#2C2C2C</color>
     <color name="table_text_light">#A6A6A6</color>
