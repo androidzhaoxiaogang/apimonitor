@@ -5,4 +5,8 @@ public class Constants {
 
 	public static final String loginInfoUrl = serverHost + "LoginInfo.ashx";
 	public static final String examInfoUrl = serverHost + "ExamInfo.ashx";
+	
+	
+	public static final String PASSWORD = "password";
+    public static final String USERNAME = "username";
 }

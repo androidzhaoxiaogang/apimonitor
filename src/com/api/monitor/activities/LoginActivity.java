@@ -5,6 +5,7 @@ import java.util.HashMap;
 import com.api.monitor.adapters.TextWatcherAdapter;
 import com.api.monitor.pojo.UserInfo;
 import com.api.monitor.utils.Constants;
+import com.api.monitor.utils.Prefs;
 import com.api.monitor.utils.Toaster;
 import com.api.monitor.R;
 
@@ -13,31 +14,31 @@ import fast.rocket.config.JsonCallback;
 import fast.rocket.error.RocketError;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.view.KeyEvent;
-import android.widget.TextView.OnEditorActionListener;
-import android.view.inputmethod.EditorInfo;
 
 public class LoginActivity extends Activity {
-
+	private static final String TAG = "LoginActivity";
+	private static final String EMPTY = "";
 	private ProgressDialog progressDialog;
 	private AutoCompleteTextView emailText;
 	private EditText passwordText;
 	private Button signinButton;
 
 	private TextWatcher watcher = validationTextWatcher();
+	private SharedPreferences sharedPref;
 	
 	private String email;
     private String password;
@@ -51,38 +52,16 @@ public class LoginActivity extends Activity {
 	}
 
 	private void setupViews() {
+		sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 		emailText = (AutoCompleteTextView) findViewById(R.id.et_email);
 		passwordText = (EditText) findViewById(R.id.et_password);
 		signinButton = (Button) findViewById(R.id.b_signin);
 
+		final String userName = sharedPref.getString(Constants.USERNAME, EMPTY);
+		final String userPass = sharedPref.getString(Constants.PASSWORD, EMPTY);
 		// emailText.setAdapter(new ArrayAdapter<String>(this,
 		// android.R.layout.simple_dropdown_item_1line, ));
 
-		passwordText.setOnKeyListener(new OnKeyListener() {
-
-			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				if (event != null && KeyEvent.ACTION_DOWN == event.getAction()
-						&& keyCode == KeyEvent.KEYCODE_ENTER
-						&& signinButton.isEnabled()) {
-					handleLogin();
-					return true;
-				}
-				return false;
-			}
-		});
-
-		passwordText.setOnEditorActionListener(new OnEditorActionListener() {
-
-			public boolean onEditorAction(TextView v, int actionId,
-					KeyEvent event) {
-				if (actionId == EditorInfo.IME_ACTION_DONE
-						&& signinButton.isEnabled()) {
-					handleLogin();
-					return true;
-				}
-				return false;
-			}
-		});
 
 		signinButton.setOnClickListener(new OnClickListener() {
 
@@ -94,6 +73,11 @@ public class LoginActivity extends Activity {
 
 		emailText.addTextChangedListener(watcher);
 		passwordText.addTextChangedListener(watcher);
+		
+		if (!TextUtils.isEmpty(userName) && !TextUtils.isEmpty(userPass)) {
+			emailText.setText(userName);
+			passwordText.setText(userPass);
+		}
 	}
 
 	private TextWatcher validationTextWatcher() {
@@ -101,7 +85,6 @@ public class LoginActivity extends Activity {
 			public void afterTextChanged(Editable gitDirEditText) {
 				updateUIWithValidation();
 			}
-
 		};
 	}
 
@@ -121,7 +104,7 @@ public class LoginActivity extends Activity {
 		dialog.setCancelable(true);
 		dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 			public void onCancel(DialogInterface dialog) {
-				// TODO: cancel operation
+				Rocket.getDefault(LoginActivity.this).cancelAll(TAG);
 			}
 		});
 		dialog.show();
@@ -147,6 +130,7 @@ public class LoginActivity extends Activity {
 
 		Rocket.with(this).enableCookie(true)
 				.requestParams(params)
+				.requestTag(TAG)
 				.targetType(UserInfo.class)
 				.invoke(callback)
 				.load(Constants.loginInfoUrl);
@@ -157,10 +141,16 @@ public class LoginActivity extends Activity {
 		@Override
 		public void onCompleted(RocketError error, UserInfo result) {
 			dissmissProgressDialog();
-			if (error != null) {
-				Toaster.errroMessage(error, LoginActivity.this);
-			} else {
+			if (error == null) {
+				if (result != null && result.getResult()) {
+					Prefs.setStrValue(sharedPref.edit(), Constants.USERNAME, email);
+					Prefs.setStrValue(sharedPref.edit(), Constants.PASSWORD, password);
+				}
+				
 				startActivity(new Intent(LoginActivity.this, MainActivity.class));
+				finish();
+			} else {
+				Toaster.errroMessage(error, LoginActivity.this);
 			}
 		}
 	};

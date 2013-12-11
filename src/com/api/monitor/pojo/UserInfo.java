@@ -2,13 +2,13 @@ package com.api.monitor.pojo;
 
 public class UserInfo {
 
-	private String result;
+	private boolean result;
 	private String name;
 	private String message;
-	public String getResult() {
+	public boolean getResult() {
 		return result;
 	}
-	public void setResult(String result) {
+	public void setResult(boolean result) {
 		this.result = result;
 	}
 	public String getName() {
