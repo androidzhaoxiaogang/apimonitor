@@ -15,11 +15,13 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 
 public class RealtimeMonitorFragment extends Fragment {
+	protected static final int TYPE_REALTIME = 0x00;
+	protected static final int TYPE_HISTORY = 0x01;
 	
-	private List<String> groupData = new ArrayList<String>(); //一级目录标题列表
-	private List<List<String>> childrenData = new ArrayList<List<String>>(); //二级目录标题列表
+	protected List<String> groupData = new ArrayList<String>(); //一级目录标题列表
+	protected List<List<String>> childrenData = new ArrayList<List<String>>(); //二级目录标题列表
 
-	private BaseExpandableListAdapter mAdapter; //可扩展的列表适配器
+	protected BaseExpandableListAdapter mAdapter; //可扩展的列表适配器
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -39,9 +41,13 @@ public class RealtimeMonitorFragment extends Fragment {
 				false);
 		ExpandableListView listView = (ExpandableListView) rootView.findViewById(R.id.expand_listView);
 		
-		mAdapter = new ExpandAdapter(getActivity(), groupData, childrenData);
+		setAdapter();
 		listView.setAdapter(mAdapter);
 		return rootView;
+	}
+	
+	public void setAdapter() {
+		mAdapter = new ExpandAdapter(getActivity(), groupData, childrenData, TYPE_REALTIME);
 	}
 
 	@Override

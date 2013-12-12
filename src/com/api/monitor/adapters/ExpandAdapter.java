@@ -20,14 +20,16 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
 	private List<List<String>> mChildrenData;
 	private LayoutInflater layoutInflater;
 	private Context mContext;
+	private int type;
 
 	public ExpandAdapter(Context context, List<String> groupData,
-			List<List<String>> childrenData) {
+			List<List<String>> childrenData, int type) {
 		mGroupData = groupData;
 		mChildrenData = childrenData;
 		layoutInflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		mContext = context;
+		this.type = type;
 	}
 
 	@Override
@@ -63,6 +65,11 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
 //				intent.putExtra("pname", mGroupData.get(arg0));
 //				intent.putExtra("title", mChildrenData.get(arg0).get(arg1));
 //				mContext.startActivity(intent);
+				if(type == 0x01) {
+					
+				} else {
+					
+				}
 			}
 		});
 		
