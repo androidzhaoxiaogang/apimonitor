@@ -40,6 +40,12 @@
             android:name=".activities.RealtimeMonitorActivity"
             android:screenOrientation="portrait" >
         </activity>
+        
+        <provider
+            android:name="com.api.monitor.dao.MonitorProvider"
+            android:authorities="com.api.monitor"
+            android:exported="false" >
+        </provider>
     </application>
 
 </manifest>

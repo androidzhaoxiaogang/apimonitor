@@ -3,6 +3,8 @@ package com.api.monitor.adapters;
 import java.util.List;
 
 import com.api.monitor.R;
+import com.api.monitor.activities.HistoryMonitorActivity;
+import com.api.monitor.activities.RealtimeMonitorActivity;
 
 
 import android.content.Context;
@@ -61,14 +63,14 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
 			
 			@Override
 			public void onClick(View view) {
-//				Intent intent = new Intent(mContext, GovFunctionDetailActivity.class);
-//				intent.putExtra("pname", mGroupData.get(arg0));
-//				intent.putExtra("title", mChildrenData.get(arg0).get(arg1));
-//				mContext.startActivity(intent);
 				if(type == 0x01) {
-					
+					Intent intent = new Intent(mContext, RealtimeMonitorActivity.class);
+					intent.putExtra("api", mChildrenData.get(arg0).get(arg1));
+					mContext.startActivity(intent);
 				} else {
-					
+					Intent intent = new Intent(mContext, HistoryMonitorActivity.class);
+					intent.putExtra("api", mChildrenData.get(arg0).get(arg1));
+					mContext.startActivity(intent);
 				}
 			}
 		});
@@ -128,11 +130,11 @@ public class ExpandAdapter extends BaseExpandableListAdapter {
 	}
 
 	static class ParentHolder {
-		ImageView indicator; //根据点击事件而变化的indicator
-		TextView title; //一级标题
+		ImageView indicator; 
+		TextView title; 
 	}
 	
 	static class ChildHolder {
-		TextView title; //二级标题
+		TextView title; 
 	}
 }
