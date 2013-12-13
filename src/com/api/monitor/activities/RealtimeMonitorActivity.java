@@ -43,12 +43,13 @@ public class RealtimeMonitorActivity extends SherlockActivity {
 
 	private boolean isFirstTime = false;
 	private boolean isPagePaused = false;
-	private String mTitle;
-	private XYMultipleSeriesRenderer mRenderer;
-	private XYMultipleSeriesDataset mDataset;
-	private GraphicalView mChart;
-	private XYSeries mSeries;
+	private String chartTitle;
+	private XYMultipleSeriesRenderer seriesRenderer;
+	private XYMultipleSeriesDataset dataset;
+	private GraphicalView realtimeChart;
+	private XYSeries xySeries;
 
+	@SuppressLint("HandlerLeak")
 	private Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			if (msg.what == MSG_UPDATE) {
@@ -108,20 +109,20 @@ public class RealtimeMonitorActivity extends SherlockActivity {
 
 	@SuppressLint("HandlerLeak")
 	private void setupChart() {
-		mTitle = "µÇÂ½";
-		mSeries = new XYSeries(mTitle);
-		mDataset = new XYMultipleSeriesDataset();
-		mDataset.addSeries(mSeries);
+		chartTitle = "µÇÂ½";
+		xySeries = new XYSeries(chartTitle);
+		dataset = new XYMultipleSeriesDataset();
+		dataset.addSeries(xySeries);
 
 		int color = Color.parseColor("#30A7FC");
 		PointStyle style = PointStyle.CIRCLE;
-		mRenderer = buildRenderer(color, style, true);
+		seriesRenderer = buildRenderer(color, style, true);
 
-		setupRender(mRenderer, "X", "Y", 0, 20, mAddY, mAddY + 20.0,
+		setupRender(seriesRenderer, "X", "Y", 0, 20, mAddY, mAddY + 20.0,
 				Color.BLACK, Color.BLACK);
 
-		mChart = ChartFactory.getLineChartView(this, mDataset, mRenderer);
-		realtimeLayout.addView(mChart, new LayoutParams(
+		realtimeChart = ChartFactory.getLineChartView(this, dataset, seriesRenderer);
+		realtimeLayout.addView(realtimeChart, new LayoutParams(
 				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
 		fetchRealValue();
@@ -145,7 +146,7 @@ public class RealtimeMonitorActivity extends SherlockActivity {
 	protected void setupRender(XYMultipleSeriesRenderer renderer,
 			String xTitle, String yTitle, double xMin, double xMax,
 			double yMin, double yMax, int axesColor, int labelsColor) {
-		renderer.setChartTitle(mTitle);
+		renderer.setChartTitle(chartTitle);
 		renderer.setXTitle(xTitle);
 		renderer.setYTitle(yTitle);
 		renderer.setXAxisMin(xMin);
@@ -172,45 +173,45 @@ public class RealtimeMonitorActivity extends SherlockActivity {
 	}
 
 	private void updateChart() {
-		mDataset.removeSeries(mSeries);
+		dataset.removeSeries(xySeries);
 
-		int length = mSeries.getItemCount();
+		int length = xySeries.getItemCount();
 		if (length >= ITEM_COUNT) {
 			length = ITEM_COUNT;
 			for (int i = 0; i < length - 1; i++) {
 				mXvalue[i] = i;
-				mYvalue[i] = mSeries.getY(i + 1);
+				mYvalue[i] = xySeries.getY(i + 1);
 			}
-			mSeries.clear();
+			xySeries.clear();
 
 			for (int k = 0; k < length - 1; k++) {
-				mSeries.add(mXvalue[k], mYvalue[k]);
+				xySeries.add(mXvalue[k], mYvalue[k]);
 			}
 
-			mSeries.add(length - 1, mAddY);
+			xySeries.add(length - 1, mAddY);
 		} else {
 			for (int i = 0; i < length; i++) {
-				mXvalue[i] = (int) mSeries.getX(i);
-				mYvalue[i] = mSeries.getY(i);
+				mXvalue[i] = (int) xySeries.getX(i);
+				mYvalue[i] = xySeries.getY(i);
 			}
-			mSeries.clear();
+			xySeries.clear();
 
 			for (int k = 0; k < length; k++) {
-				mSeries.add(mXvalue[k], mYvalue[k]);
+				xySeries.add(mXvalue[k], mYvalue[k]);
 			}
-			mSeries.add(mAddX++, mAddY);
+			xySeries.add(mAddX++, mAddY);
 		}
 
-		mDataset.addSeries(mSeries);
-		mChart.invalidate();
+		dataset.addSeries(xySeries);
+		realtimeChart.invalidate();
 	}
 
 	private void updateFirstChart() {
-		mDataset.removeSeries(mSeries);
-		mSeries.clear();
-		mSeries.add(mAddX++, mAddY);
-		mDataset.addSeries(mSeries);
-		mChart.invalidate();
+		dataset.removeSeries(xySeries);
+		xySeries.clear();
+		xySeries.add(mAddX++, mAddY);
+		dataset.addSeries(xySeries);
+		realtimeChart.invalidate();
 	}
 
 	private void fetchRealValue() {
@@ -234,8 +235,9 @@ public class RealtimeMonitorActivity extends SherlockActivity {
 			if (error == null) {
 				
 			} else {
-				
+				mAddY = 0;
 			}
+			
 			
 			if (!isPagePaused) {
 				if(isFirstTime) {
